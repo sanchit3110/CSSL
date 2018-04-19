@@ -1,0 +1,43 @@
+html,body{
+	background-image:url('../images/background.png');
+}
+
+#header{
+	position:relative;
+	height:10%;
+	background-color: #459fecc4;
+    color: #fff1f1;
+}
+
+#sidebar{
+	position:absolute;
+	height:90%;
+	
+	background-color:#4c7598fa;
+}
+
+.counties {
+  fill: none;
+}
+
+.states {
+  fill: none;
+  stroke: #fff;
+  stroke-linejoin: round;
+}
+
+
+
+#progressBar{
+	position:absolute;
+	top:50%;
+	left:25%;
+	width:50%;
+	
+	
+}
+
+#applyFilters{
+	text-align:center;
+	margin:15%;
+}

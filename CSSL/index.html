@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<head>
+	<meta charset="utf-8">
+	
+	<!-- d3 library -->
+	<script src="https://d3js.org/d3.v4.min.js"></script>
+	<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+	<script src="https://d3js.org/topojson.v2.min.js"></script>
+	
+	<!-- bootstrap library -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	
+	<!-- css files -->
+	<link rel="stylesheet" type="text/css" href="css/base.css">
+	<link rel="stylesheet" type="text/css" href="css/bootstrap-select.min.css">
+	
+	<!-- bootstarp js file	 -->
+	<script src="bootstrap-select.min.js"></script>
+	
+</head>
+
+<body>
+	<!-- main outer container div -->
+	<div class="container">
+		<div class="row">
+			<div id="header" class="col-sm-12 col-xs-12">
+					<center><h1>Map Your Morals</h1></center>
+			</div>
+		</div>
+		
+		<div class="row">
+			<!-- siderbar div containing all the filters -->
+			<div id="sidebar" class="col-sm-2 col-xs-2">
+				<h4>Number Of Maps</h4>
+				<!-- user can select the number of maps to be compared 1 or 2 -->
+				<select id="numberOfMaps" class="selectpicker" data-width="80%" onchange="toggleFunction()">
+					<option value="1">1</option>
+					<option value="2">2</option>
+				</select>
+				<br><br>
+				<!-- based on the number of map selection the filters dropdown change -->
+				<!-- toggle1 div is for single map and toggle2 div is for two maps -->
+				<div id="toggle1">
+				<h4>Psychological traits</h4>
+				
+				<select id="traits" class="selectpicker" data-width="80%">
+					<option value="0">Trait1</option>
+					<option value="1">Trait2</option>
+					<option value="2">Trait3</option>
+					
+			    </select>
+				
+				<br><br>
+				<h4>Demographics</h4>
+				<label for="sex">Sex</label>
+				<select id="sex" class="selectpicker" multiple data-width="90%">
+					<option value="0">Male</option>
+					<option value="1">Female</option>
+					
+			    </select>
+				<br>
+				<label for="ageRange">Age</label>
+			    <select id="ageRange" class="selectpicker" multiple data-width="90%">
+					<option value="0">21 - 30</option>
+					<option value="1">31 - 40</option>
+					<option value="2">41 - 50</option>
+					<option value="3">More than 50</option>
+			    </select>
+				
+				<br>
+				<label for="education">Education</label>
+			    <select id="education" class="selectpicker" multiple data-width="90%">
+					<option value="0" title="High School">High School</option>
+					<option value="1" title="Bachelor's">Bachelor's Degree</option>
+					<option value="2" title="Master's">Master's Degree</option>
+					<option value="3" title="Doctorate">Doctorate Degree</option>
+			    </select>
+				
+				<br>
+				<label for="ethnicity">Ethnicity</label>
+			    <select id="ethnicity" class="selectpicker" multiple data-width="90%">
+					<option value="0">White</option>
+					<option value="1">Hispanic or Latino</option>
+					<option value="2">African American</option>
+					<option value="3">Asian</option>
+			    </select>
+				</div>
+				
+				<!-- if the user selects number of maps as 2, display of toggle2 div is set to block -->
+				<div id="toggle2"  style="display:none">
+				<h4>Psychological traits</h4>
+				
+				<select id="traits" class="selectpicker" multiple data-width="80%">
+				<optgroup label="Map1" data-max-options="1">
+					<option value="0" title="Map1:Trait1">Trait1</option>
+					<option value="1" title="Map1:Trait2">Trait2</option>
+					<option value="2" title="Map1:Trait3">Trait3</option>
+				</optgroup>	
+				<optgroup label="Map2" data-max-options="1">
+					<option value="0" title="Map2:Trait1">Trait1</option>
+					<option value="1" title="Map2:Trait2">Trait2</option>
+					<option value="2" title="Map2:Trait3">Trait3</option>
+				</optgroup>
+			    </select>
+				
+				<br><br>
+				<h4>Demographics</h4>
+				<label for="sex">Sex</label>
+				<select id="sex" class="selectpicker" multiple data-width="90%">
+				<optgroup label="Map1">
+					<option value="0" title="Map1:Male">Male</option>
+					<option value="1" title="Map1:Female">Female</option>
+				</optgroup>	
+				<optgroup label="Map2">
+					<option value="0" title="Map2:Male">Male</option>
+					<option value="1" title="Map2:Female">Female</option>
+				</optgroup>
+			    </select>
+				<br>
+				<label for="ageRange">Age</label>
+			    <select id="ageRange" class="selectpicker" multiple data-width="90%">
+				<optgroup label="Map1">
+					<option value="0" title="Map1:21-30">21 - 30</option>
+					<option value="1" title="Map1:31-40">31 - 40</option>
+					<option value="2" title="Map1:41-50">41 - 50</option>
+					<option value="3" title="Map1:>50">More than 50</option>
+				</optgroup>
+				<optgroup label="Map2">
+					<option value="0" title="Map2:21-30">21 - 30</option>
+					<option value="1" title="Map2:31-40">31 - 40</option>
+					<option value="2" title="Map2:41-50">41 - 50</option>
+					<option value="3" title="Map2:>50">More than 50</option>
+				</optgroup>
+			    </select>
+				
+				<br>
+				<label for="education">Education</label>
+			    <select id="education" class="selectpicker" multiple data-width="90%">
+				<optgroup label="Map1">
+					<option value="0" title="Map1:High School">High School</option>
+					<option value="1" title="Map1:Bachelor's">Bachelor's Degree</option>
+					<option value="2" title="Map1:Master's">Master's Degree</option>
+					<option value="3" title="Map1:Doctorate">Doctorate Degree</option>
+				</optgroup>
+				<optgroup label="Map2">
+					<option value="0" title="Map2:High School">High School</option>
+					<option value="1" title="Map2:Bachelor's">Bachelor's Degree</option>
+					<option value="2" title="Map2:Master's">Master's Degree</option>
+					<option value="3" title="Map2:Doctorate">Doctorate Degree</option>
+				</optgroup>
+			    </select>
+				
+				<br>
+				<label for="ethnicity">Ethnicity</label>
+			    <select id="ethnicity" class="selectpicker" multiple data-width="90%">
+				<optgroup label="Map1">
+					<option value="0" title="Map1:White">White</option>
+					<option value="1" title="Map1:Hispanic or Latino">Hispanic or Latino</option>
+					<option value="2" title="Map1:African American">African American</option>
+					<option value="3" title="Map1:Asian">Asian</option>
+				</optgroup>
+				<optgroup label="Map2">
+					<option value="0" title="Map2:White">White</option>
+					<option value="1" title="Map2:Hispanic or Latino">Hispanic or Latino</option>
+					<option value="2" title="Map2:African American">African American</option>
+					<option value="3" title="Map2:Asian">Asian</option>
+				</optgroup>
+			    </select>
+				</div>
+			
+				<!-- apply filters button, generate the map -->
+				<button type="button" class="btn" id="applyFilters" onclick="generateMap()">Apply Filters</button>
+				
+			</div>
+			
+			<div id="map" class="col-sm-10 col-xs-10 col-xs-offset-2 col-sm-offset-2">
+				<!-- bootstarp progress bar as loading icon -->
+				<div class="progress" id="progressBar">
+				  <div class="progress-bar" role="progressbar" aria-valuenow="70"
+				  aria-valuemin="0" aria-valuemax="100" style="width:70%">
+					<span class="sr-only">70% Complete</span>
+				  </div>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+<script>
+var flag =0 ;
+function generateMap(){
+	if(document.getElementById("numberOfMaps").value == 1){
+		
+		clearChart(); //clears the old map
+		createMap(1); //creates single chart
+	}
+	else{
+		
+		clearChart(); //clears the old map
+		createMap(2); //creates two charts. Not working properly
+		
+		
+		
+	}
+}
+//toggle function toggles between the dropdowns for the sidebar
+function toggleFunction(){
+	if(document.getElementById("numberOfMaps").value == "1"){
+		d3.select("#toggle2").style("display","none");
+		d3.select("#toggle1").style("display","block");
+		
+	}
+	else{
+		d3.select("#toggle1").style("display","none");
+		d3.select("#toggle2").style("display","block");
+	}
+}
+/*
+var ideologyList = {trait1 : "0",trait2 : "1",trait3 : "2",trait4 : "3"};
+var sexList = {male : "0", female : "1"};
+var ageList = {};
+var educationList = {};
+*/
+//click variable to track all the filters selected and query the data accordingly
+var clickVar = [{
+	"sex" : "0",
+	"race" : "1",
+	"age" : "3",
+	"education" : "3",
+	"ideology" : "2"
+	
+}];
+var chartDiv = d3.select("#map");	//div where the chart is created
+var svg = chartDiv.append("svg").attr("width",960).attr("height",600);	//appending svg element to the #map div
+var moralData = d3.map();	//dummy data for the counties 
+var testData = d3.map();	//data for the counties //this data variable is used for charts
+var path = d3.geoPath();
+var x = d3.scaleLinear()
+    .domain([1, 10])
+    .rangeRound([600, 860]);
+var color = d3.scaleThreshold()
+    .domain(d3.range(2, 10))
+    .range(d3.schemeBlues[9]);
+var g = svg.append("g")
+    .attr("class", "key")
+    .attr("transform", "translate(0,40)");
+g.selectAll("rect")
+  .data(color.range().map(function(d) {
+      d = color.invertExtent(d);
+      if (d[0] == null) d[0] = x.domain()[0];
+      if (d[1] == null) d[1] = x.domain()[1];
+      return d;
+    }))
+  .enter().append("rect")
+    .attr("height", 8)
+    .attr("x", function(d) { return x(d[0]); })
+    .attr("width", function(d) { return x(d[1]) - x(d[0]); })
+    .attr("fill", function(d) { return color(d[0]); });
+g.append("text")
+    .attr("class", "caption")
+    .attr("x", x.range()[0])
+    .attr("y", -6)
+    .attr("fill", "#000")
+    .attr("text-anchor", "start")
+    .attr("font-weight", "bold")
+    .text("Psychological Score Scale");
+g.call(d3.axisBottom(x)
+    .tickSize(13)
+    .tickFormat(function(x, i) { return i ? x : x ; })
+    .tickValues(color.domain()))
+  .select(".domain")
+    .remove();
+function manageData(mainData){	//not used
+	//alert(mainData.length);
+	mainData = mainData.filter(function(d){
+		
+		if(d.sex == clickVar[0].sex && d.race == clickVar[0].race && d.age == clickVar[0].age && d.education == clickVar[0].education && d.ideology == clickVar[0].ideology){
+		moralData.set(d.fipschar, +d.estimate);
+		testData.set(d.fipschar,[+d.estimate,+d.lb,d.polyname]);
+		return d;
+		}
+		
+		})
+	
+	console.log(moralData);
+}
+	
+function readFile(name){ //not used
+	d3.csv(name, function(d) 
+		{ 
+			console.log(typeof(d))
+			manageData(d);
+			//ready();
+			
+		})
+}
+function createMap(check){
+	
+	d3.select("#progressBar").style("display","block");
+	
+	//clearChart();
+	if(check == 1){
+	svg = chartDiv.append("svg").attr("width",960).attr("height",600);
+	}
+	else{
+	svg = chartDiv.append("svg").attr("width",960).attr("height",600).attr("viewBox","0 0 1200 1000");
+	//createMap(2)
+	}
+	
+	x = d3.scaleLinear()
+    .domain([1, 10])
+    .rangeRound([600, 860]);
+	color = d3.scaleThreshold()
+		.domain(d3.range(2, 10))
+		.range(d3.schemeBlues[9]);
+	g = svg.append("g")
+		.attr("class", "key")
+		.attr("transform", "translate(0,40)");
+	g.selectAll("rect")
+	  .data(color.range().map(function(d) {
+		  d = color.invertExtent(d);
+		  if (d[0] == null) d[0] = x.domain()[0];
+		  if (d[1] == null) d[1] = x.domain()[1];
+		  return d;
+		}))
+	  .enter().append("rect")
+		.attr("height", 8)
+		.attr("x", function(d) { return x(d[0]); })
+		.attr("width", function(d) { return x(d[1]) - x(d[0]); })
+		.attr("fill", function(d) { return color(d[0]); });
+	g.append("text")
+		.attr("class", "caption")
+		.attr("x", x.range()[0])
+		.attr("y", -6)
+		.attr("fill", "#000")
+		.attr("text-anchor", "start")
+		.attr("font-weight", "bold")
+		.text("Psychological Score Scale");
+	g.call(d3.axisBottom(x)
+		.tickSize(13)
+		.tickFormat(function(x, i) { return i ? x : x ; })
+		.tickValues(color.domain()))
+	  .select(".domain")
+		.remove();
+	
+	d3.queue()
+    .defer(d3.json, "https://d3js.org/us-10m.v1.json")
+    
+    .defer(d3.csv, "simulated_data.csv", function(d) {  //reading the main csv file
+		//if condition to filter out data according to the filters selected
+		if(d.sex == clickVar[0].sex && d.race == clickVar[0].race && d.age == clickVar[0].age && d.education == clickVar[0].education && d.ideology == clickVar[0].ideology){
+			moralData.set(d.fipschar, +d.estimate); // not used 
+			testData.set(d.fipschar,[d.polyname,+d.estimate,+d.se,+d.lb,+d.ub]); //includes all the data to be displayed
+		}
+		
+	})
+	
+    .await(ready);
+}
+//initial data load and creating chart
+d3.queue()
+    .defer(d3.json, "https://d3js.org/us-10m.v1.json")
+    
+    .defer(d3.csv, "simulated_data.csv", function(d) { 
+	
+		if(d.sex == clickVar[0].sex && d.race == clickVar[0].race && d.age == clickVar[0].age && d.education == clickVar[0].education && d.ideology == clickVar[0].ideology){
+			moralData.set(d.fipschar, +d.estimate); 
+			testData.set(d.fipschar,[d.polyname,+d.estimate,+d.se,+d.lb,+d.ub]);
+		}
+		
+	})
+	
+    .await(ready);
+//function to create the chart	
+function ready(error, us) {
+	
+	
+	if (error) throw error;
+	
+  d3.select("#progressBar").style("display","none");	//when data is available hide the progress bar
+  svg.append("g")
+      .attr("class", "counties")
+    .selectAll("path")
+    .data(topojson.feature(us, us.objects.counties).features) //usa county data set
+    .enter().append("path")
+      .attr("fill", function(d) {
+		//var i = moralData.get(d.id);
+		var k = testData.get(d.id);
+		//console.log(i)
+		if(typeof(k)=="undefined"){
+			//noData.push(d.id);
+			return color(d.rate = 0); //if data for the particular county is not present then fill the county with white color
+		}
+		else{
+			//joeData.push(d.id);
+			return color(d.rate = k[1]); 
+		}
+	  })
+      
+      .attr("d", path)
+	  .on('click',function(d){
+		console.log(d);
+	  })
+	.append("title")
+      .html(function(d) { 
+		if(typeof(testData.get(d.id)) != "undefined" ){
+			return "Score: "+d.rate + "<br/>County: "+testData.get(d.id)[0]+"<br/>Se: "+testData.get(d.id)[2]+"<br/>Lb: "+testData.get(d.id)[3]+"<br/>Ub: "+testData.get(d.id)[4]; 
+		}
+		else{
+			return "Data Not Available"; //if data for the county not present then on hover display data not available
+		}
+	});
+	  
+	
+  svg.append("path")
+      .datum(topojson.mesh(us, us.objects.states, function(a, b) { return a !== b; }))
+      .attr("class", "states")
+      .attr("d", path);
+	
+	/*if(flag==0){
+	flag=1;
+	createMap(2);
+	}*/	
+}
+//checkBox defaults
+//function not used
+function checkAll(val){
+	if(val.value == "all"){
+		if(val.checked){
+			var traitList = document.getElementsByName(val.name);
+			for(var i=1;i<traitList.length;i++){
+				traitList[i].checked = false;
+			}
+		
+		}
+	}
+	else{
+		if(val.checked){
+			document.getElementsByName(val.name)[0].checked = false;
+		}
+	}
+}
+//clear map chart
+function clearChart(){
+	d3.select('svg').remove();
+}
+</script>
+</body>
+
+</html>
